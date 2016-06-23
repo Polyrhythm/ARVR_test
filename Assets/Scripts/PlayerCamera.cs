@@ -14,16 +14,20 @@ public class PlayerCamera : NetworkBehaviour {
 		vrPlayer.transform.SetParent (vrSpawn.transform);
 	}
 
-	[Client]
 	public void OnTrackingLost() {
+		if (isServer)
+			return;
+
 		if (!isLocalPlayer || base.connectionToServer.connectionId != 1)
 			return;
 
 		vrWorld.SetActive (false);
 	}
 
-	[Client]
 	public void OnTrackingFound() {
+		if (isServer)
+			return;
+
 		if (!isLocalPlayer || base.connectionToServer.connectionId != 1)
 			return;
 
@@ -45,7 +49,6 @@ public class PlayerCamera : NetworkBehaviour {
 			camera.transform.parent = this.gameObject.transform;
 			camera.transform.position = this.gameObject.transform.position;
 			CmdVRChild (this.gameObject, vrWorld);
-
 		} else {
 			camera.SetActive (true);
 			GameObject.Find ("PlayerCube(Clone)").transform.SetParent (vrWorld.transform);

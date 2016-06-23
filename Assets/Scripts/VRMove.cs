@@ -6,7 +6,7 @@ public class VRMove : NetworkBehaviour {
     private const int RIGHT_ANGLE = 90;
 
     // This variable determinates if the player will move or not 
-    private bool isWalking = false;
+	public static bool isWalking = false;
 
     private GvrHead head;
 	private GameObject avatar;
@@ -43,12 +43,11 @@ public class VRMove : NetworkBehaviour {
     {
         if (!isLocalPlayer) return;
 
-		avatar.transform.localRotation = head.transform.localRotation;
+		avatar.transform.rotation = head.transform.rotation;
 
         // Walk when the Cardboard Trigger is used 
         if (walkWhenTriggered && !walkWhenLookDown && !isWalking && Input.GetMouseButtonDown(0))
         {
-            Debug.Log("WALK!");
             isWalking = true;
         }
         else if (walkWhenTriggered && !walkWhenLookDown && isWalking && Input.GetMouseButtonDown(0))
@@ -57,7 +56,7 @@ public class VRMove : NetworkBehaviour {
         }
 
         // Walk when player looks below the threshold angle 
-        if (walkWhenLookDown && !walkWhenTriggered && !isWalking &&
+		if (walkWhenLookDown && !walkWhenTriggered && !isWalking && !Input.GetMouseButton(0) &&
             head.transform.eulerAngles.x >= thresholdAngle &&
             head.transform.eulerAngles.x <= RIGHT_ANGLE)
         {
@@ -90,7 +89,7 @@ public class VRMove : NetworkBehaviour {
         {
             Vector3 direction = new Vector3(head.transform.forward.x, 0, head.transform.forward.z).normalized * speed * Time.deltaTime;
 	        rotation = Quaternion.Euler(new Vector3(0, -transform.rotation.eulerAngles.y, 0));
-            transform.Translate(rotation * direction);
+			GetComponent<Rigidbody>().MovePosition(transform.position + direction);
         }
 
         if (freezeYPosition)

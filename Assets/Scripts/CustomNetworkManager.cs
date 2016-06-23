@@ -17,7 +17,7 @@ public class CustomNetworkManager : NetworkManager {
 	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId) {
 		if (CustomNetworkManager.singleton.numPlayers == 0) {
 			Debug.Log ("vrSpawn");
-			vrPlayer = (GameObject)Instantiate (VRPlayer, vrSpawn.transform.position, Quaternion.identity);
+			vrPlayer = (GameObject)Instantiate (VRPlayer, vrSpawn.transform.position, vrSpawn.transform.rotation);
 			NetworkServer.AddPlayerForConnection (conn, vrPlayer, playerControllerId);
 		} else {
 			Debug.Log ("arSpawn");
